@@ -22,6 +22,7 @@ export default {
             method: 'POST',
             body: JSON.stringify(pushSubscription)
           }).then((response) => {
+            alert('订阅成功')
             console.log(response)
           })
         })
@@ -31,6 +32,7 @@ export default {
       navigator.serviceWorker.ready.then(function (reg) {
         reg.pushManager.getSubscription().then(function (subscription) {
           subscription.unsubscribe().then(function (successful) {
+            alert('退订成功')
             console.log('退订成功')
           }).catch(function (e) {
             console.error(e)
