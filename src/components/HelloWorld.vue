@@ -1,113 +1,56 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+  <div>
+    <h1>新闻</h1>
+    <button @click='subscribe'>订阅</button>
+    <button @click='unsubscribe'>退订</button>
   </div>
 </template>
 
 <script>
+const applicationServerKey = 'BPnUp53sW3wnSHfwQH3ktZejRqTBynzsqE9GVSnkuIrNbltAMKPR-dvqV78pWFlfuvEN5q2q07kq7wYV2s5-0W0'
 export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+  methods: {
+    subscribe: function () {
+      navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+        let options = {
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(applicationServerKey)
+        }
+        serviceWorkerRegistration.pushManager.subscribe(options).then((pushSubscription) => {
+          console.log(JSON.stringify(pushSubscription))
+          fetch(this.$subscribeUrl, {
+            method: 'POST',
+            body: JSON.stringify(pushSubscription)
+          }).then((response) => {
+            console.log(response)
+          })
+        })
+      })
+    },
+    unsubscribe: function () {
+      console.log('unsubscribe')
     }
   }
 }
+
+function urlBase64ToUint8Array (base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4)
+  const base64 = (base64String + padding)
+    .replace(/-/g, '+')
+    .replace(/_/g, '/')
+
+  const rawData = window.atob(base64)
+  const outputArray = new Uint8Array(rawData.length)
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i)
+  }
+  return outputArray
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
