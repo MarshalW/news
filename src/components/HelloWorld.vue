@@ -28,7 +28,15 @@ export default {
       })
     },
     unsubscribe: function () {
-      console.log('unsubscribe')
+      navigator.serviceWorker.ready.then(function (reg) {
+        reg.pushManager.getSubscription().then(function (subscription) {
+          subscription.unsubscribe().then(function (successful) {
+            console.log('退订成功')
+          }).catch(function (e) {
+            console.error(e)
+          })
+        })
+      })
     }
   }
 }
