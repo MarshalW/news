@@ -8,6 +8,7 @@ const config = require('./config.json')
 
 Vue.config.productionTip = false
 Vue.prototype.$subscribeUrl = config.subscribeUrl
+Vue.prototype.$applicationServerKey = config.applicationServerKey
 
 /* eslint-disable no-new */
 new Vue({

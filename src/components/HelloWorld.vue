@@ -7,14 +7,13 @@
 </template>
 
 <script>
-const applicationServerKey = 'BPnUp53sW3wnSHfwQH3ktZejRqTBynzsqE9GVSnkuIrNbltAMKPR-dvqV78pWFlfuvEN5q2q07kq7wYV2s5-0W0'
 export default {
   methods: {
     subscribe: function () {
       navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
         let options = {
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(applicationServerKey)
+          applicationServerKey: urlBase64ToUint8Array(this.$applicationServerKey)
         }
         serviceWorkerRegistration.pushManager.subscribe(options).then((pushSubscription) => {
           console.log(JSON.stringify(pushSubscription))
